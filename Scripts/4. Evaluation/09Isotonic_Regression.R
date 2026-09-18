@@ -1,8 +1,15 @@
-######### Isotonic Calibration Experiments #########
+#==========================================================
+# Isotonic Regression Experiments
+#==========================================================
+library(dplyr)
+library(tidyr)
+library(here)
 
 source(here("Scripts", "4. Evaluation", "Isotonic_Regression_Functions.R"))
 
-######### 1. Prepare Calibration Data #########
+#----------------------------------------------------------
+# 1. Prepare Isotonic Regression Data 
+#----------------------------------------------------------
 
 # Create calibration datasets for the Wilkens and final weighted H2H models.
 wilkens_calibration_data <- build_calibration_data(
@@ -15,9 +22,9 @@ h2h_calibration_data <- build_calibration_data(
   predictions = final_weighted_h2h_predictions
 )
 
-
-######### 2. Two-Season Calibration Experiment #############
-
+#----------------------------------------------------------
+# 2. Two-Season Isotonic Regression Experiment
+#----------------------------------------------------------
 
 # Apply rolling isotonic calibration using the previous two seasons.
 wilkens_calibrated_2 <- rolling_isotonic_calibration(
@@ -83,7 +90,7 @@ two_season_comparison <- wilkens_calibrated_2 %>%
   )
 
 
-######### 3.2 Predictive Performance #########
+######### 2.2 Predictive Performance #########
 
 # Compare raw and calibrated probabilities for both models.
 two_season_results <- bind_rows(
@@ -130,7 +137,7 @@ two_season_results %>%
   )
 
 
-######### 3.3 Calibration Performance #########
+######### 2.3 Calibration Performance #########
 
 # Calculate ECE and MCE for each model specification.
 two_season_calibration_metrics <- bind_rows(
@@ -170,8 +177,9 @@ two_season_calibration_metrics <- bind_rows(
 
 two_season_calibration_metrics
 
-
-######### 4. Four-Season Robustness Check ##################
+#----------------------------------------------------------
+# 3. Four-Season Robustness Check 
+#----------------------------------------------------------
 
 # Repeat calibration with a longer four-season training window.
 wilkens_calibrated_4 <- rolling_isotonic_calibration(

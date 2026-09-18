@@ -1,3 +1,7 @@
+## Research Project
+
+This repository accompanies my MSc research project. It is intended to provide the code required to understand and reproduce the analysis presented in the project.
+
 # Head-to-Head Information in Football Match Prediction
 
 This repository contains the R code used for my MSc research project investigating whether head-to-head (H2H) match information can improve football match outcome prediction.
@@ -21,6 +25,7 @@ Tests the assumptions underlying the Poisson modelling framework, including the 
 ### 3. Model Building
 
 Contains the benchmark model, H2H model specifications, parameter tuning and matched random-history control experiment.
+Additionally, displays the steps to choose the final weighted H2H specification
 
 ### 4. Model Evaluation
 
@@ -52,18 +57,57 @@ The main analysis scripts are intended to be run sequentially. Helper functions 
 
 The main workflow is:
 
-1. Data extraction and preparation
-2. Assessment of modelling assumptions
-3. Model construction and parameter tuning
-4. Model evaluation and calibration
-5. Betting strategy evaluation
+1. Extract+Merge_Data
+2. Poisson_Assumption
+3. Independence_Assumption
+4. Model_Building
+5. Tuning_Weighted #This script takes a while to run and is only necessary if you want to see the model building process
+6. Control_Testing
+7. ModelEval
+8. Calibration
+9. Isotonic_Regression
+10. Betting Strategy
+11. Betting Plots
+
 
 The project was developed in R and RStudio.
+
+## R Packages
+
+The analysis requires the following R packages:
+
+- dplyr
+- tidyr
+- purrr
+- tibble
+- readr
+- stringr
+- lubridate
+- httr2
+- jsonlite
+- ggplot2
+- patchwork
+- here
+
+Packages can be installed using:
+
+```r
+install.packages(c(
+  "dplyr",
+  "tidyr",
+  "purrr",
+  "tibble",
+  "readr",
+  "stringr",
+  "lubridate",
+  "httr2",
+  "jsonlite",
+  "ggplot2",
+  "patchwork",
+  "here"
+))
 
 ## Figures
 
 The `Figures` directory contains the principal figures generated during the analysis, including model calibration, assumption checks, random-history control results and cumulative betting performance.
 
-## Research Project
-
-This repository accompanies my MSc research project. It is intended to provide the code required to understand and reproduce the analysis presented in the project.

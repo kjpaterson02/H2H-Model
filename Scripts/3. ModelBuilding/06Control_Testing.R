@@ -1,7 +1,16 @@
+#==========================================================
+# Test H2H predictive value using control model
+#==========================================================
+library(dplyr)
+library(purrr)
 library(ggplot2)
-source(here("Scripts","3. ModelBuilding", "Control_Functions.R"))
-######### 1. Build matched random-history control pools #########
+library(patchwork)
+library(here)
 
+source(here("Scripts","3. ModelBuilding", "Control_Functions.R"))
+#----------------------------------------------------------
+# 1. Build matched random-history control pools 
+#----------------------------------------------------------
 # Create pools of eligible historical fixtures to be randomly selected in place of  H2H fixtures.
 random_control_pools <- build_random_control_pools(
   data = epl_database,
@@ -9,8 +18,9 @@ random_control_pools <- build_random_control_pools(
   max_h2h = 6
 )
 
-
-######### 2. Full 500-simulation random control #########
+#----------------------------------------------------------
+# 2. Full 500-simulation random control
+#----------------------------------------------------------
 
 set.seed(123)
 
@@ -46,8 +56,9 @@ random_control_summary <- random_control_results %>%
 
 random_control_summary
 
-
-######### 3. Final matched random-history control plots #########
+#----------------------------------------------------------
+# 3. Final matched random-history control plots 
+#----------------------------------------------------------
 
 # Brier Score distribution.
 random_brier_plot <- ggplot(
@@ -115,7 +126,7 @@ random_logloss_plot <- ggplot(
   )
 
 
-######### 4. Combine final plots #########
+#Combine final plots 
 h2h_performance <- evaluate_model(
   evaluation,
   final_weighted_h2h_predictions$home_prob[eval_rows],
@@ -127,8 +138,7 @@ h2h_brier <- h2h_performance$Brier
 h2h_logloss <- h2h_performance$LogLoss
 h2h_accuracy <- h2h_performance$Accuracy
 
-# Display Brier Score and Log Loss distributions side by side
-# with a shared legend and overall title.
+
 random_control_plot <- 
   random_brier_plot + random_logloss_plot +
   plot_layout(
@@ -144,8 +154,10 @@ random_control_plot <-
 
 random_control_plot
 
+#----------------------------------------------------------
+# 5. Compare simulations with genuine H2H model 
+#----------------------------------------------------------
 
-######### 5. Compare simulations with genuine H2H model #########
 comparison_random_h2h <- random_control_results %>%
   summarise(
     n_better_Brier = sum(Brier < h2h_brier),

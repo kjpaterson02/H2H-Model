@@ -56,8 +56,6 @@ write.csv(
 # Import bookmaker odds
 #==========================================================
 
-
-
 # Historical EPL odds files should first be downloaded from Football-Data.co.uk and placed in:
 # Data/EPL ODDS/
 #

@@ -1,3 +1,7 @@
+#==========================================================
+# Build Model Predictions
+#==========================================================
+
 library(dplyr)
 library(purrr)
 library(here)
@@ -6,7 +10,7 @@ source(here("Scripts","3. ModelBuilding", "ModelBuild_Functions.R"))
 
 
 #----------------------------------------------------------
-# Regather saved predictions
+# Regather predictions if already saved
 #----------------------------------------------------------
 
 all_predictions <- readRDS("Data/all_model_predictions.rds")

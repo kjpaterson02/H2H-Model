@@ -1,5 +1,5 @@
 # ============================================================
-# WEIGHTED H2H MODEL: PARAMETER SELECTION AND SENSITIVITY TESTS
+# Weighted H2H Model: Parameter selection and sensitivity tests
 # ============================================================
 
 library(dplyr)      
@@ -10,11 +10,11 @@ library(patchwork)
 
 
 source(here("Scripts","4. Evaluation", "Eval_Functions.R"))
-# ============================================================
-# 0. INITIAL HALF-LIFE TEST: THREE-MATCH H2H MODEL
-# ============================================================
+# ----------------------------------------------------------
+# 0.Initial half-life test: Three-match H2H model
+# ----------------------------------------------------------
 
-# Build the H2H history
+# Build H2H history
 h2h_history <- build_h2h_history(
   epl_database,
   h2h_seasons = 3,
@@ -22,7 +22,7 @@ h2h_history <- build_h2h_history(
 )
 
 
-# Calculate the baseline Wilkens expected-goals parameters.
+# Calculate baseline Wilkens expected-goals parameters.
 wilkens_lambdas <- tibble(
   home_lambda = rolling_xg(
     epl_database,
@@ -95,7 +95,7 @@ half_life_results %>%
 
 half_life_results
 
-
+# Add unweighted result for comparison
 unweighted_result <- evaluate_model(
   evaluation,
   h2h_predictions$home_prob[eval_rows],
@@ -121,9 +121,9 @@ half_life_comparison %>%
   )
 
 
-# ============================================================
+#  ----------------------------------------------------------
 # 1. TESTING A LARGER UNWEIGHTED H2H SAMPLE
-# ============================================================
+# ----------------------------------------------------------
 
 
 # Construct the largest H2H history required by the experiment
@@ -153,9 +153,9 @@ h2h_sample_results %>%
 
 
 
-# ============================================================
+# ----------------------------------------------------------
 # 2. WEIGHTED SIX-MATCH H2H MODEL AND EFFECTIVE SAMPLE SIZE
-# ============================================================
+# ----------------------------------------------------------
 
 # Candidate half-lives 
 half_lives <- c(
@@ -202,11 +202,10 @@ weighted_h2h_6_results
 
 
 
-# ============================================================
+#  ----------------------------------------------------------
 # 3. PLOT HALF-LIFE SENSITIVITY RESULTS
-# ============================================================
+#  ----------------------------------------------------------
 
-# Brier score sensitivity plot.
 # Store the unweighted log-loss benchmark.
 unweighted_brier <- unweighted_6$Brier
 
@@ -264,9 +263,9 @@ logloss_plot
 
 
 
-# ============================================================
+# ----------------------------------------------------------
 # 4. TEST THE H2H MIXING PARAMETER (ALPHA)
-# ============================================================
+#  ----------------------------------------------------------
 
 # Candidate alpha values
 alpha_values <- seq(0, 1, by = 0.05)
@@ -282,9 +281,9 @@ weighted_alpha_results %>%
   dplyr::arrange(LogLoss)
 
 
-# ============================================================
+#  ----------------------------------------------------------
 # 5. JOINT OPTIMISATION OF ALPHA AND HALF-LIFE
-# ============================================================
+# ----------------------------------------------------------
 
 # Candidate half-life values concentrated around best performing region
 half_life_values <- c(
@@ -307,10 +306,8 @@ alpha_values <- c(
 )
 
 
-# ------------------------------------------------------------
-# 5.1 Precompute weighted H2H values
-# ------------------------------------------------------------
 
+#Precompute weighted H2H values
 weighted_h2h_cache <- purrr::map(
   half_life_values,
   ~ weighted_h2h_from_history(
@@ -323,10 +320,7 @@ names(weighted_h2h_cache) <- as.character(
   half_life_values
 )
 
-
-# ------------------------------------------------------------
-# 5.2 Evaluate the full parameter grid
-# ------------------------------------------------------------
+#Evaluate full parameter grid
 
 joint_results <- purrr::map_dfr(
   half_life_values,
@@ -351,9 +345,8 @@ joint_results %>%
     Accuracy = sprintf("%.6f", Accuracy)
   )
 
-# ------------------------------------------------------------
-# 5.3 Calculate mean effective sample size by half-life
-# ------------------------------------------------------------
+
+#Calculate mean effective sample size by half-life
 ess_by_half_life <- tibble(
   half_life = c(
     2,
@@ -398,9 +391,9 @@ weighted_joint_results_with_ess %>%
   )
 
 
-# ============================================================
+#  ----------------------------------------------------------
 # 6. FINAL HALF-LIFE SENSITIVITY ANALYSIS: ALPHA = 0.40
-# ============================================================
+#  ----------------------------------------------------------
 
 half_lives <- c(
   0.5,
@@ -428,19 +421,17 @@ weighted_h2h_final_results <- purrr::map_dfr(
 
 weighted_h2h_final_results
 
-# ============================================================
+# ----------------------------------------------------------
 # 7. FINAL HALF-LIFE SENSITIVITY PLOTS: ALPHA = 0.40
-# ============================================================
+#  ----------------------------------------------------------
 
 # Store unweighted benchmark values.
 unweighted_brier <- unweighted_6$Brier
 unweighted_logloss <- unweighted_6$LogLoss
 
 
-# ------------------------------------------------------------
-# 8.1 Brier score panel
-# ------------------------------------------------------------
 
+# Brier score panel
 brier_plot <- ggplot(
   weighted_h2h_final_results,
   aes(x = half_life, y = Brier)
@@ -494,10 +485,7 @@ brier_plot <- ggplot(
   )
 
 
-# ------------------------------------------------------------
-# 8.2 Log-loss panel
-# ------------------------------------------------------------
-
+# Log-loss panel
 logloss_plot <- ggplot(
   weighted_h2h_final_results,
   aes(x = half_life, y = LogLoss)
@@ -551,10 +539,8 @@ logloss_plot <- ggplot(
   )
 
 
-# ------------------------------------------------------------
-# 8.3 Combine panels
-# ------------------------------------------------------------
 
+#Combine panels
 combined_plot <- brier_plot + logloss_plot +
   plot_layout(
     guides = "collect"

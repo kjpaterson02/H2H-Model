@@ -1,13 +1,18 @@
+#==========================================================
+# Test Model Calibrations
+#==========================================================
+
 library(dplyr)
 library(rlang)
 library(ggplot2)
 library(patchwork)
+library(here)
 
 source(here("Scripts", "4. Evaluation", "Eval_Functions.R"))
 
-
-######### 1. Calculate model calibration #########
-
+#----------------------------------------------------------
+# 1. Calculate model calibration 
+#----------------------------------------------------------
 # Assess calibration for each model using the common evaluation sample.
 rolling <- calibrate_model(
   evaluation,
@@ -33,9 +38,9 @@ market <- calibrate_model(
   "Market Average"
 )
 
-
-######### 2. Combine calibration metrics #########
-
+#----------------------------------------------------------
+#2. Combine calibration metrics 
+#----------------------------------------------------------
 # Combine calibration results from all models into a single table.
 calibration_results <- bind_rows(
   rolling$metrics,
@@ -46,8 +51,9 @@ calibration_results <- bind_rows(
 
 calibration_results
 
-
-######### 3. Display calibration plots #########
+#----------------------------------------------------------
+#3. Display calibration plots
+#----------------------------------------------------------
 
 (rolling$plots) /
   (Unweighted_H2H$plots) /

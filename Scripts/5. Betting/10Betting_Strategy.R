@@ -4,6 +4,7 @@
 library(dplyr)
 library(tidyr)
 library(ggplot2)
+library(here)
 
 source(here("Scripts", "5. Betting", "Betting_Functions.R"))
 
@@ -316,7 +317,7 @@ rolling_bets_best <- rolling_bets_reportable %>%
 
 
 # ------------------------------------------------------------
-# Calculate results by objective and outcome
+# 11. Calculate results by objective and outcome
 # ------------------------------------------------------------
 
 best_final_results <- list()
@@ -352,7 +353,7 @@ best_final_results <- do.call(
 
 
 # ------------------------------------------------------------
-# Calculate overall results for each objective
+# 12. Calculate overall results for each objective
 # ------------------------------------------------------------
 
 # Combine Home, Draw and Away bets to obtain overall strategy performance.
@@ -382,7 +383,7 @@ best_overall_results <- do.call(
 
 
 # ------------------------------------------------------------
-# Combine final best-odds results
+# 13. Combine final best-odds results
 # ------------------------------------------------------------
 
 # Combine outcome-specific and overall results into one table.
@@ -411,7 +412,7 @@ best_odds_results
 
 
 # ------------------------------------------------------------
-# Compare average and best available odds
+# 14. Compare average and best available odds
 # ------------------------------------------------------------
 
 # Extract the overall P&L-optimised strategy using average odds.

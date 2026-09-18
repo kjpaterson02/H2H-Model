@@ -1,19 +1,20 @@
-# ------------------------------------------------------------
-# Cumulative P&L plots
-# ------------------------------------------------------------
+#==========================================================
+# Cumulative betting results plots
+#==========================================================
+library(dplyr)
+library(ggplot2)
+library(here)
 
-# Set a common end date for all plots.
-plot_end_date <- max(
-  rolling_bets_reportable$date,
-  na.rm = TRUE
-)
-
+source(here("Scripts", "5. Betting", "Betting_Functions.R"))
 
 
 # ------------------------------------------------------------
 # 1. Generate plots for betting results
 # ------------------------------------------------------------
-
+plot_end_date <- max(
+  rolling_bets_reportable$date,
+  na.rm = TRUE
+)
 # P&L-optimised strategy.
 pnl_plot <- plot_cumulative_metric(
   rolling_bets_reportable,

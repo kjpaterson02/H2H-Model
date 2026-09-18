@@ -1,8 +1,14 @@
-# Load evaluation functions
+#==========================================================
+# Evaluate models using performance metrics
+#==========================================================
+library(dplyr)
+library(here)
+
 source(here("Scripts", "4. Evaluation", "Eval_Functions.R"))
 
-
-######### 1. Define common evaluation sample #########
+#----------------------------------------------------------
+# 1. Define common evaluation sample 
+#----------------------------------------------------------
 
 # Keep matches which the Wilkens model produces complete probabilities.
 eval_rows <- complete.cases(
@@ -20,9 +26,9 @@ evaluation <- epl_database %>%
   ) %>%
   slice(which(eval_rows))
 
-
-######### 2. Restrict all model predictions to the same sample #########
-
+#----------------------------------------------------------
+# 2. Restrict all model predictions to the same sample 
+#----------------------------------------------------------
 wilkens_eval <- wilkens_predictions[eval_rows, ]
 
 h2h_eval <- h2h_predictions[eval_rows, ]
@@ -36,8 +42,9 @@ B365_eval <- B365_predictions[eval_rows, ]
 
 baseline_eval <- baseline_predictions[eval_rows, ]
 
-
-######### 3. Evaluate and compare all models #########
+#----------------------------------------------------------
+# 3. Evaluate and compare all models 
+#----------------------------------------------------------
 
 # Calculate Brier score, Log Loss and Accuracy for each model
 # using an identical set of matches.
@@ -88,5 +95,9 @@ results <- bind_rows(
   .id = "Model"
 )
 
-# Display final model comparison.
-results
+results %>%
+  mutate(
+    Brier = sprintf("%.4f", Brier),
+    LogLoss = sprintf("%.4f", LogLoss),
+    Accuracy = sprintf("%.4f", Accuracy)
+  )
